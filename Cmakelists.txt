@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(AIExpenseBackend)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_definitions(-D_WIN32_WINNT=0x0601)
+
+find_package(Crow CONFIG REQUIRED)
+find_package(CURL CONFIG REQUIRED)
+find_package(SQLite3 REQUIRED)
+
+add_executable(ai_backend
+    main.cpp
+    utils/http_client.cpp
+    services/ai_service.cpp
+    storage/storage.cpp
+)
+
+target_link_libraries(ai_backend PRIVATE 
+Crow::Crow
+CURL::libcurl
+SQLite::SQLite3
+)
