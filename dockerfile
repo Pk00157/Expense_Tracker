@@ -16,7 +16,7 @@ RUN git clone https://github.com/CrowCpp/Crow.git
 
 COPY . .
 
-RUN g++ $(find . -name "*.cpp") \
+RUN g++ main.cpp $(find routes controllers services storage -name "*.cpp" 2>/dev/null) \
 -I Crow/include \
 -I /usr/include/nlohmann \
 -lcurl \
