@@ -7,18 +7,23 @@ RUN apt update && apt install -y \
     libcurl4-openssl-dev \
     libboost-all-dev \
     libasio-dev \
-    nlohmann-json3-dev
+    nlohmann-json3-dev \
+    libsqlite3-dev
 
 WORKDIR /app
 
-# Download Crow
+# Install Crow
 RUN git clone https://github.com/CrowCpp/Crow.git
 
 COPY . .
 
 # Compile server
-RUN g++ main.cpp controllers/*.cpp services/*.cpp storage/*.cpp \
--I Crow/include -I /usr/include/nlohmann -lcurl -o server
+RUN g++ main.cpp storage/storage.cpp \
+-I Crow/include \
+-I /usr/include/nlohmann \
+-lcurl \
+-lsqlite3 \
+-o server
 
 EXPOSE 10000
 
