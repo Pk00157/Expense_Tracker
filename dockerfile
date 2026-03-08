@@ -12,17 +12,16 @@ RUN apt update && apt install -y \
 
 WORKDIR /app
 
-# Install Crow
 RUN git clone https://github.com/CrowCpp/Crow.git
 
 COPY . .
 
-# Compile server
-RUN g++ main.cpp storage/storage.cpp \
+RUN g++ $(find . -name "*.cpp") \
 -I Crow/include \
 -I /usr/include/nlohmann \
 -lcurl \
 -lsqlite3 \
+-lpthread \
 -o server
 
 EXPOSE 10000
