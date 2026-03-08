@@ -6,7 +6,8 @@ RUN apt update && apt install -y \
     git \
     libcurl4-openssl-dev \
     libboost-all-dev \
-    libasio-dev
+    libasio-dev \
+    nlohmann-json3-dev
 
 WORKDIR /app
 
@@ -16,7 +17,8 @@ RUN git clone https://github.com/CrowCpp/Crow.git
 COPY . .
 
 # Compile server
-RUN g++ main.cpp -I Crow/include -lcurl -o server
+RUN g++ main.cpp controllers/*.cpp services/*.cpp storage/*.cpp \
+-I Crow/include -I /usr/include/nlohmann -lcurl -o server
 
 EXPOSE 10000
 
