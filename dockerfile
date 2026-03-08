@@ -3,13 +3,19 @@ FROM ubuntu:22.04
 RUN apt update && apt install -y \
     g++ \
     cmake \
-    libcurl4-openssl-dev
+    git \
+    libcurl4-openssl-dev \
+    libboost-all-dev
 
 WORKDIR /app
 
+# Download Crow
+RUN git clone https://github.com/CrowCpp/Crow.git
+
 COPY . .
 
-RUN g++ main.cpp -lcurl -o server
+# Compile server with Crow include path
+RUN g++ main.cpp -I Crow/include -lcurl -o server
 
 EXPOSE 10000
 
