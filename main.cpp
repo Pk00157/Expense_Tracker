@@ -3,6 +3,7 @@
 #include "middleware/cors_middleware.h"
 #include "./controllers/expense_controller.h"
 #include "storage/storage.h"
+#include <cstdlib>
 
 
 int main() {
@@ -25,5 +26,11 @@ CROW_ROUTE(app, "/<path>")
 
 registerExpenseRoutes(app, controller);
 
-app.port(18080).multithreaded().run();
+int port = 18080;
+const char* portEnv  = std::getenv("PORT");
+
+if(portEnv){
+    port= std::stoi(portEnv);
+}
+app.port(port).multithreaded().run();
 }
