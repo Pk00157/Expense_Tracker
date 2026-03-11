@@ -45,7 +45,7 @@
 //         AI Financial Insights
 //       </h2>
 
-//       {loading ? (
+//       {loading ? (   
 //         <p className="text-gray-500">Analyzing your spending...</p>
 //       ) : (
 //         <ul className="list-disc pl-5 text-gray-700">

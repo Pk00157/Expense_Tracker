@@ -84,7 +84,7 @@ function App() {
 
 {page === "insights" && (
   <AIInsights expenses={expenses} />
-)}
+)}  
 
   </DashboardLayout>
   
