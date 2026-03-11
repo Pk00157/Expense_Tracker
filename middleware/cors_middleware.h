@@ -16,7 +16,7 @@ struct CORSMiddleware {
                       context& ctx) {
 
         res.add_header("Access-Control-Allow-Origin", "*");
-        res.add_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        res.add_header("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS");
         res.add_header("Access-Control-Allow-Headers", "Content-Type");
     }
 };

@@ -29,7 +29,7 @@ public:
 }
 
         std::string description = body.value("description", "");
-        int amount = body["amount"].get<int>();
+        double amount = body["amount"].get<double>();
 
         std::string category = service.categorizeExpense(description);
         double confidence = 0.9;
@@ -39,14 +39,16 @@ public:
         response["amount"] = amount;
         response["category"] = category;
         response["confidence"] = 0.9;
+        response["created_at"] = "now";
         
     storage.saveExpense(
     description,
     amount,
     category,
     confidence
-    
 );
+        int id = sqlite3_last_insert_rowid(storage.getDB());
+                response["id"] = id;
 
         crow::response res;
         res.code = 200;
@@ -91,7 +93,13 @@ crow::response insights(const crow::request& req)
         return crow::response(500, e.what());
     }
 }
+crow::response ExpenseController::deleteExpense(int id)
+{
+    storage.deleteExpense(id);
+    std::cout << "Deleting id: " << id << std::endl;
+    return crow::response(200, "Expense deleted");
 
+}
 crow::response getExpenses()
 {
     try

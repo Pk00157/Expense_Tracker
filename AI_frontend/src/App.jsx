@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { Toaster, toast } from "react-hot-toast";
 import AIInsights from "./components/AI/AIInsights";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import ExpenseForm from "./components/expense/ExpenseForm";
@@ -10,7 +10,6 @@ import WeeklySummary from "./components/analytics/WeeklySummary";
 import StatsPanel from "./components/analytics/StatsPanel";
 import ExpenseChart from "./components/analytics/ExpenseChart";
 
-import { createExpense } from "./model/HeroModel";
 
 function App() {
 
@@ -31,20 +30,48 @@ function App() {
     fetchExpenses();
   }, []);
 
-  const addExpense = (expenseData) => {
-    try {
-      const newExpense = createExpense(expenseData);
-      setExpenses((prev) => [...prev, newExpense]);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+const addExpense = async (expenseData) => {
+  try {
+    const res = await fetch("http://localhost:18080/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(expenseData)
+    });
 
-  const deleteExpense = (id) => {
+    if (!res.ok) throw new Error("Failed to add expense");
+
+    const data = await res.json();
+
+    setExpenses((prev) => [...prev, data]);
+
+    toast.success("Expense added 💰");
+
+  } catch (err) {
+    toast.error("Failed to add expense");
+    console.error(err);
+  }
+};
+const deleteExpense = async (id) => {
+  try {
+    const res = await fetch(`http://localhost:18080/expenses/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) throw new Error("Delete failed");
+
     setExpenses((prev) =>
       prev.filter((expense) => expense.id !== id)
     );
-  };
+
+    toast.success("Expense deleted 🗑️");
+
+  } catch (err) {
+    toast.error("Delete failed");
+    console.error("Delete error:", err);
+  }
+};
 
   const updateExpense = (updatedExpense) => {
     setExpenses((prev) =>
@@ -57,7 +84,17 @@ function App() {
   };
 
   return (
-  
+  <>
+      <Toaster
+  position="top-right"
+  toastOptions={{
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff"
+    }
+  }}
+/>
   <DashboardLayout setPage={setPage}>
 
     {page === "dashboard" && (
@@ -65,7 +102,7 @@ function App() {
         <ExpenseForm onAddExpense={addExpense} />
         <ExpenseList expenses={expenses} onDelete={deleteExpense} onUpdate={updateExpense} />
         <WeeklySummary expenses={expenses} />
-        <StatsPanel expenses={expenses} />
+        {/* <StatsPanel expenses={expenses} /> */}
         <ExpenseChart expenses={expenses} />
         <AIInsights expenses={expenses} />
       </>
@@ -87,6 +124,8 @@ function App() {
 )}  
 
   </DashboardLayout>
+  </>
+  
   
 
   );

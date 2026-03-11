@@ -8,6 +8,7 @@ using json = nlohmann::json;
 
 class Storage
 {
+ 
 public:
     Storage();
     ~Storage();
@@ -20,9 +21,13 @@ public:
         const std::string& category,
         double confidence
     );
+    void deleteExpense(int id );
 
     json getAllExpenses();
-
+    sqlite3* getDB()   // <-- ADD THIS
+    {
+        return db;
+    }
 private:
     sqlite3* db;
 };

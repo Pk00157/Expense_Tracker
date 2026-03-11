@@ -5,47 +5,22 @@ export default function ExpenseForm({ onAddExpense }) {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!description.trim() || !amount) return;
+  if (!description.trim() || !amount) return;
 
-    try {
-      setLoading(true);
+  setLoading(true);
 
-      const response = await fetch("http://localhost:18080/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          description: description.trim(),
-          amount: Number(amount),
-        }),
-      });
+  await onAddExpense({
+    description: description.trim(),
+    amount: Number(amount),
+  });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Server error");
-      }
-
-      onAddExpense({
-        description: description.trim(),
-        amount: Number(amount),
-        category: data.category,
-        confidence: data.confidence,
-      });
-
-      setDescription("");
-      setAmount("");
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to analyze expense");
-    } finally {
-      setLoading(false);
-    }
-  };
+  setDescription("");
+  setAmount("");
+  setLoading(false);
+};
 
   return (
     <div className="bg-white rounded-xl shadow-md p-6 mb-8">

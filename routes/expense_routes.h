@@ -1,6 +1,7 @@
 #pragma once
 #include <crow.h>
 #include "../controllers/expense_controller.h"
+#include "../storage/storage.h"
 
 template<typename App>
 void registerExpenseRoutes(App& app, ExpenseController& controller) {
@@ -22,4 +23,8 @@ void registerExpenseRoutes(App& app, ExpenseController& controller) {
     ([&controller](){
         return controller.getExpenses();
     });
+   CROW_ROUTE(app, "/expenses/<int>").methods("DELETE"_method)
+([&controller](int id){
+    return controller.deleteExpense(id);
+});
 }
